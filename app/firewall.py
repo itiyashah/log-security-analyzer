@@ -1,7 +1,7 @@
-import sqlite3
+import sqlite3 # we are using sqlite as our database for this project
 import os
 
-def init_firewall_db(db_path="data/security_logs.db"):
+def init_firewall_db(db_path="data/security_logs.db"): # security_logs.db is the same database which used to store logs of threats in acees_log table
     """Creates the blocked_ips table if it doesn't exist."""
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
@@ -16,14 +16,14 @@ def init_firewall_db(db_path="data/security_logs.db"):
     conn.commit()
     conn.close()
 
-def block_ip(ip_address, reason="Suspicious Activity", db_path="data/security_logs.db"):
+def block_ip(ip_address, reason="Suspicious Activity", db_path="data/security_logs.db"): 
     """Adds an IP address to the firewall blocklist database."""
     init_firewall_db(db_path)
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     
     try:
-        cursor.execute('''
+        cursor.execute(''' # we use cursor() to execute sql commands
             INSERT INTO blocked_ips (ip, reason)
             VALUES (?, ?)
         ''', (ip_address, reason))
@@ -37,7 +37,7 @@ def block_ip(ip_address, reason="Suspicious Activity", db_path="data/security_lo
     conn.close()
     return success
 
-def get_blocked_ips(db_path="data/security_logs.db"):
+def get_blocked_ips(db_path="data/security_logs.db"): # in this function the blocked ip addresses are queried from the table in form of tuples and printed in terminal. 
     """Retrieves all currently blocked IPs."""
     init_firewall_db(db_path)
     conn = sqlite3.connect(db_path)
@@ -47,6 +47,6 @@ def get_blocked_ips(db_path="data/security_logs.db"):
     conn.close()
     return blocked_list
 
-if __name__ == "__main__":
+if __name__ == "__main__": # sample dataset
     block_ip("198.51.100.22", reason="Brute-Force Attack")
     print("Blocked IPs List:", get_blocked_ips())

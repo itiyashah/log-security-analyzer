@@ -1,3 +1,4 @@
+# this kicksoff the whole automated pipeline of our project
 from app.detector import run_threat_analysis
 from app.alerts import send_security_alert
 from app.firewall import block_ip

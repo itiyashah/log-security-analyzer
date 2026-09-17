@@ -1,4 +1,4 @@
-import requests
+import requests # this is used to send http api requests over the internet
 
 # Optional: If you have a Discord Webhook URL, paste it here!
 # Otherwise, keep it empty and the script will automatically run in Simulation Mode.
@@ -8,7 +8,7 @@ def send_security_alert(threat):
     """Sends a real-time threat alert to Discord via Webhook (or simulates it locally)."""
     payload = {
         "username": "🛡️ Security Bot",
-        "embeds": [
+        "embeds": [ # embed card
             {
                 "title": f"🚨 [{threat['severity']}] {threat['type']} Detected!",
                 "color": 15158332 if threat['severity'] == "HIGH" else 15844367, # Red or Yellow
@@ -26,7 +26,7 @@ def send_security_alert(threat):
     if DISCORD_WEBHOOK_URL:
         try:
             response = requests.post(DISCORD_WEBHOOK_URL, json=payload, timeout=5)
-            if response.status_code == 204:
+            if response.status_code == 204: # if alert message in form of json payload is successfully sent then it shows the success message 
                 print(f"📩 Sent Discord alert for IP: {threat['ip']}")
                 return True
         except Exception as e:
@@ -37,7 +37,7 @@ def send_security_alert(threat):
     return True
 
 if __name__ == "__main__":
-    sample_threat = {
+    sample_threat = { # sample dataset
         "ip": "198.51.100.22",
         "type": "Brute-Force Attack",
         "count": 5,

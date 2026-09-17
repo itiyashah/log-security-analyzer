@@ -1,6 +1,6 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from fastapi import FastAPI, HTTPException # import fast api modules which we are using as our backend server
+from fastapi.middleware.cors import CORSMiddleware # cors allows to exchange api requests between frontend and backend with the permissions of browser
+from pydantic import BaseModel # checks whether ip and reason is provided 
 import sqlite3
 
 from app.detector import run_threat_analysis
@@ -16,23 +16,23 @@ app = FastAPI(
 # Enable CORS for local frontend development
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=["*"], # * is a wild card character which allows all type / any type of origins 
+    allow_credentials=True, # allows sensiitve information like cookies,etc
+    allow_methods=["*"], # ""
+    allow_headers=["*"], # ""
 )
 
 # Pydantic Model for Manual IP Blocking
 class BlockIPRequest(BaseModel):
     ip: str
-    reason: str = "Manual Admin Block"
+    reason: str = "Manual Admin Block" # this reason is provided when admin manually blocks the ip address
 
 @app.get("/")
 def read_root():
     """Root endpoint to verify API server status."""
     return {"status": "online", "system": "Log Security Analyzer & SOAR Engine", "version": "1.0.0"}
 
-@app.get("/logs")
+@app.get("/logs") # collects logs of web server log file
 def fetch_logs(limit: int = 50):
     """Retrieves recent parsed web access logs from the database."""
     conn = sqlite3.connect("data/security_logs.db")

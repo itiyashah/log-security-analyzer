@@ -1,4 +1,4 @@
-import re
+import re # regex ( regular expressions)
 import sqlite3
 import os
 
@@ -16,7 +16,7 @@ def init_db(db_path="data/security_logs.db"):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS access_logs (
+        CREATE TABLE IF NOT EXISTS access_logs ( # name of the data table
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             ip TEXT,
             timestamp TEXT,
@@ -46,7 +46,7 @@ def parse_and_store_logs(log_file_path, db_path="data/security_logs.db"):
         for line in file:
             match = LOG_PATTERN.search(line)
             if match:
-                data = match.groupdict()
+                data = match.groupdict() # the values are extracted and added in the dictionary
                 cursor.execute('''
                     INSERT INTO access_logs (ip, timestamp, method, url, status, size)
                     VALUES (?, ?, ?, ?, ?, ?)
@@ -58,7 +58,7 @@ def parse_and_store_logs(log_file_path, db_path="data/security_logs.db"):
                     int(data['status']),
                     int(data['size'])
                 ))
-                parsed_count += 1
+                parsed_count += 1 # when one  data / value is successfully added the counter variable increases by 1
 
     conn.commit()
     conn.close()

@@ -1,5 +1,5 @@
 import sqlite3
-import requests
+import requests # here requests library is used to allow python to connect to external web apis
 
 def get_geoip_info(ip_address):
     """Fetches country, city, and ISP information for an IP using ip-api.com."""
@@ -8,12 +8,12 @@ def get_geoip_info(ip_address):
         return {"country": "Local Network", "city": "Internal", "isp": "Private IP"}
     
     try:
-        url = f"http://ip-api.com/json/{ip_address}?fields=status,country,city,isp"
+        url = f"http://ip-api.com/json/{ip_address}?fields=status,country,city,isp" # external web api url
         response = requests.get(url, timeout=5)
         if response.status_code == 200:
             data = response.json()
             if data.get("status") == "success":
-                return {
+                return { # this will return the geoip given by the external web api
                     "country": data.get("country", "Unknown"),
                     "city": data.get("city", "Unknown"),
                     "isp": data.get("isp", "Unknown")
@@ -23,7 +23,7 @@ def get_geoip_info(ip_address):
         
     return {"country": "Unknown", "city": "Unknown", "isp": "Unknown"}
 
-def detect_brute_force(db_path="data/security_logs.db", threshold=2):
+def detect_brute_force(db_path="data/security_logs.db", threshold=2): # here threshold means the ip addresses are sleecetd if threat has happened 2 or more than 2 times
     """Flags IPs with failed login attempts exceeding the threshold."""
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
@@ -34,13 +34,13 @@ def detect_brute_force(db_path="data/security_logs.db", threshold=2):
         FROM access_logs 
         WHERE url LIKE '%login%' AND status = 401 
         GROUP BY ip 
-        HAVING failed_attempts >= ?
+        HAVING failed_attempts >= ? # question mark is replaced by threshold
     '''
     cursor.execute(query, (threshold,))
     results = cursor.fetchall()
     conn.close()
     
-    threats = []
+    threats = [] # created an empty list or an array
     for ip, count in results:
         geo_info = get_geoip_info(ip)
         threats.append({
@@ -51,7 +51,7 @@ def detect_brute_force(db_path="data/security_logs.db", threshold=2):
             **geo_info
         })
     return threats
-
+# same as above code only the type , severity and status code changes
 def detect_directory_scanning(db_path="data/security_logs.db", threshold=2):
     """Flags IPs requesting multiple non-existent sensitive URLs (404 status)."""
     conn = sqlite3.connect(db_path)

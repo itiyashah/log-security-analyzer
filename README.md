@@ -46,9 +46,54 @@ Nginx Frontend View: Displays the 15 most recent logs on the dashboard UI.
             └── App.js
 ```
 
-to run the react app , first run uvicorn app.main:app --reload on one terminal then on another terminal run cd security-dashboard and then npm start , to run specefic python code script files run it in third terminal
+## 🚀 How to Run
+1. Setup
 
-then we also have option where admin can manually block the ip addresses
+``` text
+git clone https://github.com/itiyashah/itiyashah-log-security-analyzer.git
+
+cd itiyashah-log-security-analyzer
+
+pip install -r requirements.txt
+```
+
+2. Configure Discord Alert (Optional)
+   
+``` text
+Add your webhook to app/alerts.py:
+
+DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/YOUR_WEBHOOK_URL"
+```
+
+3. Execution
+
+Terminal 1 (Backend API):
+
+``` text
+uvicorn app.main:app --reload
+
+(Swagger UI: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs))
+```
+
+Terminal 2 (React Frontend):
+
+``` text
+cd security-dashboard
+
+npm install && npm start
+
+(Dashboard UI: http://localhost:3000)
+```
+
+Terminal 3 (Individual Scripts):
+
+``` text
+python -m app.parser      # Parse raw logs into SQLite
+
+python -m app.detector    # Run threat detection standalone
+
+python -m app.soar_engine # Execute automated SOAR pipeline
+```
 
 
 
